@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AccessAI — 중간발표</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --brand:       #138A90;
+      --brand-soft:  #DCEFEF;
+      --brand-dark:  #0F6E73;
+      --ink:         #143A40;
+      --ink-muted:   #5E7A7D;
+      --page-bg:     #EFF5F4;
+      --surface:     #FFFFFF;
+      --accent:      #E6B33E;
+      --accent-soft: #FBF0D6;
+      --divider:     #CFE0DE;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--page-bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* ── 공통 섹션 ── */
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 10%;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 32px;
+      line-height: 1.3;
+    }
+
+    /* ── 1. 히어로 ── */
+    #hero {
+      background: linear-gradient(145deg, var(--brand-dark) 0%, var(--brand) 60%, #1AABAF 100%);
+      color: white;
+      text-align: center;
+      gap: 0;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 100px;
+      padding: 6px 18px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+
+    #hero h1 {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: rgba(255,255,255,0.85);
+      max-width: 600px;
+      margin: 0 auto 48px;
+    }
+
+    .hero-quote {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      font-style: italic;
+      color: rgba(255,255,255,0.95);
+      border-left: 4px solid var(--accent);
+      padding: 12px 24px;
+      text-align: left;
+      max-width: 640px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.08);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .scroll-hint {
+      margin-top: 48px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(6px); }
+    }
+
+    /* ── 2. 문제 정의 ── */
+    #problem { background: var(--surface); }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--page-bg);
+      border: 1.5px solid var(--divider);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: var(--brand);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-desc {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+    }
+
+    .problem-boxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .prob-box {
+      border-left: 4px solid var(--brand);
+      background: var(--brand-soft);
+      border-radius: 0 12px 12px 0;
+      padding: 20px 20px;
+    }
+
+    .prob-box .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .prob-box strong { display: block; font-size: 1rem; color: var(--ink); margin-bottom: 4px; }
+    .prob-box span { font-size: 0.85rem; color: var(--ink-muted); }
+
+    .solution-banner {
+      margin-top: 32px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+      border-radius: 16px;
+      padding: 28px 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .solution-banner .sol-icon { font-size: 2.5rem; flex-shrink: 0; }
+    .solution-banner h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
+    .solution-banner p { font-size: 0.9rem; color: rgba(255,255,255,0.85); }
+
+    /* ── 3. WBS ── */
+    #wbs { background: var(--page-bg); }
+
+    .wbs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .wbs-item {
+      background: var(--surface);
+      border: 1.5px solid var(--divider);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .wbs-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .wbs-title { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+
+    .wbs-count {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+
+    .progress-track {
+      height: 8px;
+      background: var(--divider);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: var(--brand);
+      transition: width 1s ease;
+    }
+
+    .progress-fill.accent { background: var(--accent); }
+    .progress-fill.low    { background: #CBD5E1; }
+
+    .wbs-status {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .badge-done    { background: #D1FAE5; color: #065F46; }
+    .badge-ing     { background: var(--brand-soft); color: var(--brand-dark); }
+    .badge-pending { background: #F1F5F9; color: #64748B; }
+
+    .wbs-total {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 2px solid var(--brand);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .wbs-total-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+
+    .wbs-total-desc { font-size: 0.9rem; color: var(--ink-muted); }
+    .wbs-total-desc strong { color: var(--ink); display: block; font-size: 1rem; }
+
+    /* ── 4. 아키텍처 ── */
+    #arch { background: var(--surface); }
+
+    .mermaid-wrap {
+      background: var(--page-bg);
+      border: 1.5px solid var(--divider);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .tech-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      border: 1px solid var(--divider);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ── 5. 현황 ── */
+    #status { background: var(--page-bg); }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .status-grid { grid-template-columns: 1fr; }
+      section { padding: 48px 6%; }
+    }
+
+    .status-card {
+      background: var(--surface);
+      border: 1.5px solid var(--divider);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .status-card h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .status-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .dot-done { background: #10B981; }
+    .dot-ing  { background: var(--accent); }
+    .dot-todo { background: #CBD5E1; }
+
+    /* ── 푸터 ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      border-top: 1px solid var(--divider);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 1. 히어로 ── -->
+<section id="hero">
+  <div class="hero-tag">앱프로그래밍 응용 · 중간발표 2026</div>
+  <h1>AccessAI</h1>
+  <p class="hero-sub">청각장애인을 위한 AI 기반 한국어 수어(KSL) 실시간 번역 플랫폼</p>
+  <p class="hero-quote">"누구나 정확하게 통하는 수어 — 청각장애인의 일상에 가장 가까운 번역기"</p>
+  <p class="scroll-hint">▼ 스크롤하여 계속</p>
+</section>
+
+<!-- ── 2. 문제 정의 ── -->
+<section id="problem">
+  <p class="section-label">01 · 문제 정의 &amp; 비전</p>
+  <h2>한국 청각장애인 40만 명,<br>여전히 소통의 벽 앞에 서 있습니다</h2>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-number">40만+</div>
+      <div class="stat-desc">한국 등록 청각장애인 수</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3,753개</div>
+      <div class="stat-desc">국립국어원 수어 사전 단어 수</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">2초</div>
+      <div class="stat-desc">목표 수어 → 자연어 변환 속도</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">70%↑</div>
+      <div class="stat-desc">목표 수어 인식 정확도</div>
+    </div>
+  </div>
+
+  <div class="problem-boxes">
+    <div class="prob-box">
+      <div class="icon">🏥</div>
+      <strong>공공기관·병원</strong>
+      <span>수어 통역사가 없으면 의사 전달이 불가능</span>
+    </div>
+    <div class="prob-box">
+      <div class="icon">🛒</div>
+      <strong>일상 소통</strong>
+      <span>카페, 마트, 은행 — 매번 글로 써야 하는 불편</span>
+    </div>
+    <div class="prob-box">
+      <div class="icon">🚨</div>
+      <strong>긴급 상황</strong>
+      <span>119·112 신고 시 즉각적 의사 전달 불가</span>
+    </div>
+    <div class="prob-box">
+      <div class="icon">🌍</div>
+      <strong>디지털 격차</strong>
+      <span>한국 수어(KSL) 전용 AI 도구 거의 전무</span>
+    </div>
+  </div>
+
+  <div class="solution-banner">
+    <div class="sol-icon">✨</div>
+    <div>
+      <h3>AccessAI의 해결책</h3>
+      <p>통역사 없이도, 글 없이도 — 수어로 말하면 즉시 한국어 문장으로 변환.<br>
+         두 가지 입력 방식(웹캠 실시간 + 텍스트 검색)으로 다양한 상황에 대응합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 3. WBS 진행상황 ── -->
+<section id="wbs">
+  <p class="section-label">02 · WBS 진행상황</p>
+  <h2>총 60개 산출물 기준<br>현재까지의 개발 현황</h2>
+
+  <div class="wbs-grid">
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">1. 기획 산출물</span>
+        <span class="wbs-count">6 / 7</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:86%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-done">86% 완료</span> — 비전·요구사항·WBS·일정·ADR 완성</div>
+    </div>
+
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">2. 개발 환경</span>
+        <span class="wbs-count">7 / 9</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:78%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-done">78% 완료</span> — .env, requirements.txt, package.json 등</div>
+    </div>
+
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">3. 백엔드 (FastAPI)</span>
+        <span class="wbs-count">8 / 11</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:73%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-ing">진행중</span> — API 연동 완성, LSTM 모듈 미연결</div>
+    </div>
+
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">4. 프론트엔드 (React)</span>
+        <span class="wbs-count">11 / 16</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:69%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-ing">진행중</span> — 텍스트 모드 거의 완성, 웹캠 미연동</div>
+    </div>
+
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">5. 모바일 앱 (React Native)</span>
+        <span class="wbs-count">0 / 5</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill low" style="width:0%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-pending">예정</span> — 웹 완성 후 포팅 예정</div>
+    </div>
+
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">6. 통합·품질</span>
+        <span class="wbs-count">1 / 5</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill accent" style="width:20%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-ing">진행중</span> — 웹-백엔드 기본 통합 완료</div>
+    </div>
+
+    <div class="wbs-item">
+      <div class="wbs-header">
+        <span class="wbs-title">7. 배포</span>
+        <span class="wbs-count">0 / 7</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill low" style="width:0%"></div>
+      </div>
+      <div class="wbs-status"><span class="badge badge-pending">예정</span> — 5주차 배포 일정</div>
+    </div>
+  </div>
+
+  <div class="wbs-total">
+    <div class="wbs-total-num">33 / 60</div>
+    <div class="wbs-total-desc">
+      <strong>전체 산출물 진행률 55%</strong>
+      현재 3주차 기준 — 핵심 기능(텍스트 번역 모드)은 90% 완성 상태
+    </div>
+  </div>
+</section>
+
+<!-- ── 4. 아키텍처 ── -->
+<section id="arch">
+  <p class="section-label">03 · 시스템 아키텍처</p>
+  <h2>React + FastAPI + Gemini API<br>멀티 API 통합 구조</h2>
+
+  <div class="mermaid-wrap">
+    <div class="mermaid">
+flowchart TD
+    User(["👤 사용자"])
+
+    subgraph FE["⚛️ React 프론트엔드 (Vite · Tailwind)"]
+        direction LR
+        Home["홈 화면"]
+        Text["텍스트 입력 모드"]
+        Cam["웹캠 모드 (개발중)"]
+    end
+
+    subgraph BE["🔧 FastAPI 백엔드 (Python)"]
+        direction TB
+        DictAPI["/dictionary/search"]
+        ImgAPI["/dictionary/image"]
+        TransText["/translate/text"]
+        TransCam["/translate/webcam"]
+    end
+
+    User --> Home
+    Home --> Text & Cam
+    Text --> DictAPI & TransText
+    Text --> ImgAPI
+    Cam --> TransCam
+
+    DictAPI --> KCISA["🏛️ 국립국어원\n수어사전 API\n(3,753 단어 캐시)"]
+    ImgAPI  --> Wiki["📖 Wikipedia API\n(명사 이미지)"]
+    TransText --> Gemini["🤖 Gemini API\n(수어→자연어 변환)"]
+    TransCam  --> Gemini
+
+    style FE fill:#DCEFEF,stroke:#138A90,color:#143A40
+    style BE fill:#EFF5F4,stroke:#138A90,color:#143A40
+    style Gemini fill:#FBF0D6,stroke:#E6B33E,color:#143A40
+    style KCISA fill:#DCEFEF,stroke:#138A90,color:#143A40
+    style Wiki fill:#DCEFEF,stroke:#138A90,color:#143A40
+    </div>
+  </div>
+
+  <div class="tech-chips">
+    <span class="chip">⚛️ React 19</span>
+    <span class="chip">🎨 Tailwind CSS</span>
+    <span class="chip">⚡ Vite</span>
+    <span class="chip">🐍 FastAPI</span>
+    <span class="chip">🤖 Gemini API</span>
+    <span class="chip">🏛️ 국립국어원 API</span>
+    <span class="chip">📖 Wikipedia API</span>
+    <span class="chip">👁️ MediaPipe Hands</span>
+    <span class="chip">🧠 LSTM (PyTorch)</span>
+  </div>
+</section>
+
+<!-- ── 5. 현황 & 다음 단계 ── -->
+<section id="status">
+  <p class="section-label">04 · 현재 상태 &amp; 다음 단계</p>
+  <h2>3주차 현재 — 텍스트 번역 모드 완성,<br>웹캠 실시간 인식 연동 진행 중</h2>
+
+  <div class="status-grid">
+    <div class="status-card">
+      <h3><span style="color:#10B981">✅</span> 완성된 기능</h3>
+      <ul class="status-list">
+        <li><span class="dot dot-done"></span>FastAPI 서버 + CORS 설정</li>
+        <li><span class="dot dot-done"></span>국립국어원 수어사전 전체 캐싱 (3,753개)</li>
+        <li><span class="dot dot-done"></span>텍스트 검색 → 수어 후보 카드 출력</li>
+        <li><span class="dot dot-done"></span>Wikipedia API 명사 이미지 연동</li>
+        <li><span class="dot dot-done"></span>Gemini API 수어 단어 시퀀스 → 자연어 문장</li>
+        <li><span class="dot dot-done"></span>React 라우팅 · 공통 컴포넌트 완성</li>
+        <li><span class="dot dot-done"></span>청록(teal) 기반 접근성 UI 팔레트 적용</li>
+      </ul>
+    </div>
+
+    <div class="status-card">
+      <h3><span style="color:#E6B33E">🔄</span> 진행 중 / 예정</h3>
+      <ul class="status-list">
+        <li><span class="dot dot-ing"></span>MediaPipe Hands 웹캠 연동 (4주차)</li>
+        <li><span class="dot dot-ing"></span>LSTM 수어 단어 분류 모델 학습</li>
+        <li><span class="dot dot-todo"></span>웹캠 → Gemini 실시간 파이프라인 통합</li>
+        <li><span class="dot dot-todo"></span>프론트엔드 + 백엔드 최종 통합 빌드</li>
+        <li><span class="dot dot-todo"></span>웹 앱 배포 (Vercel / Render)</li>
+        <li><span class="dot dot-todo"></span>React Native 모바일 포팅</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  AccessAI · 앱프로그래밍 응용 · 2026 중간발표 &nbsp;|&nbsp; React + FastAPI + Gemini API
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#DCEFEF',
+      primaryBorderColor: '#138A90',
+      primaryTextColor: '#143A40',
+      lineColor: '#5E7A7D',
+      edgeLabelBackground: '#EFF5F4',
+      fontFamily: 'Apple SD Gothic Neo, Noto Sans KR, sans-serif',
+    }
+  });
+</script>
+</body>
+</html>
